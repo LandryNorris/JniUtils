@@ -3,10 +3,10 @@ package io.github.landrynorris.jniutils
 import kotlinx.cinterop.*
 import platform.android.*
 
-fun CPointer<JNIEnvVar>.getMethodId(clazz: jclass, name: String, sig: String): jmethodID? {
+fun CPointer<JNIEnvVar>.getMethodId(clazz: jclass, name: String, signature: String): jmethodID? {
     val method = pointed.pointed?.GetMethodID ?: error("JNI is not Oracle standard")
     return name.encodeToByteArray().usePinned { pinnedName ->
-        sig.encodeToByteArray().usePinned { pinnedSig ->
+        signature.encodeToByteArray().usePinned { pinnedSig ->
             method.invoke(this, clazz, pinnedName.addressOf(0),
                 pinnedSig.addressOf(0))
         }

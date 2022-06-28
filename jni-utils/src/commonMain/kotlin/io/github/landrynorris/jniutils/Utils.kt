@@ -1,11 +1,14 @@
 package io.github.landrynorris.jniutils
 
 import kotlinx.cinterop.*
+import platform.android.JNI_FALSE
 import platform.android.JNI_TRUE
 import platform.android.jboolean
 import platform.android.jvalue
 
 fun jboolean.toBoolean(): Boolean = (this == JNI_TRUE.toUByte())
+
+fun Boolean.toJBoolean(): jboolean = if(this) JNI_TRUE.toUByte() else JNI_FALSE.toUByte()
 
 val Double.jvalue: CValue<jvalue> get() {
     val value = this
