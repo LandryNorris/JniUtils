@@ -2,8 +2,9 @@ package io.github.landrynorris.sample
 
 object JniBridge {
     init {
-        println("Loading library")
+        println("Loading library for JNI")
         System.loadLibrary("sample")
+        println("Loaded library")
     }
 
     external fun methodWithParameters(value: Int)

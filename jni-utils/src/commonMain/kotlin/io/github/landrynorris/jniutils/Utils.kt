@@ -1,18 +1,42 @@
 package io.github.landrynorris.jniutils
 
 import kotlinx.cinterop.*
-import platform.android.JNI_FALSE
-import platform.android.JNI_TRUE
-import platform.android.jboolean
-import platform.android.jvalue
+import platform.android.*
 
 fun jboolean.toBoolean(): Boolean = (this == JNI_TRUE.toUByte())
 
 fun Boolean.toJBoolean(): jboolean = if(this) JNI_TRUE.toUByte() else JNI_FALSE.toUByte()
 
-val Double.jvalue: CValue<jvalue> get() {
-    val value = this
-    return cValue<jvalue> { d = value }
+fun Byte.jvalue(scope: NativePlacement): jvalue {
+    return scope.alloc<jvalue>().also { it.b = this }
+}
+
+fun Short.jvalue(scope: NativePlacement): jvalue {
+    return scope.alloc<jvalue>().also { it.s = this }
+}
+
+fun Char.jvalue(scope: NativePlacement): jvalue {
+    return scope.alloc<jvalue>().also { it.c = code.toUShort() }
+}
+
+fun Int.jvalue(scope: NativePlacement): jvalue {
+    return scope.alloc<jvalue>().also { it.i = this }
+}
+
+fun Long.jvalue(scope: NativePlacement): jvalue {
+    return scope.alloc<jvalue>().also { it.j = this }
+}
+
+fun jobject?.jvalue(scope: NativePlacement): jvalue {
+    return scope.alloc<jvalue>().also { it.l = this }
+}
+
+fun Float.jvalue(scope: NativePlacement): jvalue {
+    return scope.alloc<jvalue>().also { it.f = this }
+}
+
+fun Double.jvalue(scope: NativePlacement): jvalue {
+    return scope.alloc<jvalue>().also { it.d = this }
 }
 
 fun Array<out CValue<jvalue>>.toCArray(memScope: NativePlacement): CArrayPointer<jvalue> {
