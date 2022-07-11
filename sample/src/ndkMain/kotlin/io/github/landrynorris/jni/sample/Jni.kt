@@ -58,7 +58,11 @@ fun registerJniNatives(env: CPointer<JNIEnvVar>) {
     env.registerNatives {
         clazz = env.findClass("io.github.landrynorris.sample.JniBridge".signature())
 
-        method(name = "buttonClicked", ::buttonClicked)
+        method {
+            name = "buttonClicked"
+            signature = Signature(listOf(Long), Void).toString()
+            function = staticCFunction(::buttonClicked)
+        }
 
         method {
             name = "createRepository"
