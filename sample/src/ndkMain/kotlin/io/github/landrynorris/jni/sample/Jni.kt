@@ -4,6 +4,7 @@ import io.github.landrynorris.jniutils.*
 import kotlinx.cinterop.*
 import kotlinx.cinterop.nativeHeap.alloc
 import platform.android.*
+import kotlin.reflect.KClass
 
 fun methodWithParameters(env: CPointer<JNIEnvVar>, thiz: jobject, intValue: Int) {
     println("Got int from JVM. Value is $intValue")
@@ -47,6 +48,9 @@ fun getText(env: CPointer<JNIEnvVar>, thiz: jobject, ptr: Long): jstring {
 fun loadJni(jvm: CPointer<JavaVMVar>, reserved: CPointer<*>): Int {
     val env = jvm.env() ?: error("Unable to get JNI environment")
     registerJniNatives(env)
+
+    val types = listOf(JNIMethod::class, kotlin.Int::class, kotlin.Double::class)
+    println("Types are: ${types.joinToString(", ") { classToSignature(it).signature }}")
     return JNI_VERSION_1_6
 }
 
@@ -54,11 +58,7 @@ fun registerJniNatives(env: CPointer<JNIEnvVar>) {
     env.registerNatives {
         clazz = env.findClass("io.github.landrynorris.sample.JniBridge".signature())
 
-        method {
-            name = "buttonClicked"
-            signature = Signature(listOf(Long), Void).toString()
-            function = staticCFunction(::buttonClicked)
-        }
+        method(name = "buttonClicked", ::buttonClicked)
 
         method {
             name = "createRepository"
