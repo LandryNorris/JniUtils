@@ -1,5 +1,6 @@
 package io.github.landrynorris.jniutils
 
+import platform.android.jstring
 import kotlin.reflect.KClass
 
 data class Signature(val parameterClasses: List<JClass>, val returnClass: JClass) {

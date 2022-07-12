@@ -34,6 +34,17 @@ fun CPointer<JNIEnvVar>.releaseStringChars(string: jstring, chars: CPointer<jcha
     return method.invoke(this, string, chars)
 }
 
+fun CPointer<JNIEnvVar>.newString(string: String): jstring? {
+    val method = pointed.pointed?.NewStringUTF ?: error("JNI is not Oracle standard")
+    return memScoped {
+        val bytes = string.encodeToByteArray()
+        val buffer = allocArray<ByteVar>(bytes.size) {
+            value = bytes[it]
+        }
+        method.invoke(this@newString, buffer)
+    }
+}
+
 fun CPointer<JNIEnvVar>.newStringUTF(chars: CPointer<ByteVar>): jstring? {
     val method = pointed.pointed?.NewStringUTF ?: error("JNI is not Oracle standard")
     return method.invoke(this, chars)

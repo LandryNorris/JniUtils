@@ -4,6 +4,7 @@ import io.github.landrynorris.jniutils.*
 import kotlinx.cinterop.*
 import kotlinx.cinterop.nativeHeap.alloc
 import platform.android.*
+import kotlin.math.sign
 import kotlin.reflect.KClass
 
 fun methodWithParameters(env: CPointer<JNIEnvVar>, thiz: jobject, intValue: Int) {
@@ -60,13 +61,13 @@ fun registerJniNatives(env: CPointer<JNIEnvVar>) {
 
         method {
             name = "buttonClicked"
-            signature = Signature(listOf(Long), Void).toString()
+            signature = signature(::buttonClicked)
             function = staticCFunction(::buttonClicked)
         }
 
         method {
             name = "createRepository"
-            signature = Signature(listOf(), Long).toString()
+            signature = signature(::createRepository)
             function = staticCFunction(::createRepository)
         }
 
@@ -78,13 +79,13 @@ fun registerJniNatives(env: CPointer<JNIEnvVar>) {
 
         method {
             name = "methodWithParameters"
-            signature = Signature(listOf(Int), Void).toString()
+            signature = signature(::methodWithParameters)
             function = staticCFunction(::methodWithParameters)
         }
 
         method {
             name = "callJavaFunction"
-            signature = Signature(listOf(Double), Void).toString()
+            signature = signature(::callJavaFunction)
             function = staticCFunction(::callJavaFunction)
         }
     }
