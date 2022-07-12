@@ -12,6 +12,7 @@ object JniBridge {
     external fun buttonClicked(ptr: Long)
     external fun getText(ptr: Long): String
     external fun createRepository(): Long
+    external fun crash(message: String)
 }
 
 class JavaClass {

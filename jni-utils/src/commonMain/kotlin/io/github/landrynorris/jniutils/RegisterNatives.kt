@@ -47,6 +47,7 @@ class JNIMethodScope {
 
     fun method(name: String, block: JNIMethod.() -> Unit) {
         val method = JNIMethod()
+        method.name = name
         method.block()
         methods.add(method)
     }

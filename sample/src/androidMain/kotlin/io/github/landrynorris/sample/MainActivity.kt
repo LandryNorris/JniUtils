@@ -23,6 +23,10 @@ class MainActivity: AppCompatActivity() {
             buttonRepository.buttonClicked()
             label.text = buttonRepository.getText()
         }
+
+        findViewById<Button>(R.id.btnCrash).setOnClickListener {
+            JniBridge.crash("App requested a Fatal Error")
+        }
     }
 
     private fun testJni() {
