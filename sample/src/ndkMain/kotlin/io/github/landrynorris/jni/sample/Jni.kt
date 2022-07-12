@@ -45,6 +45,11 @@ fun getText(env: CPointer<JNIEnvVar>, thiz: jobject, ptr: Long): jstring {
     return repository.getText().toJString(env) ?: error("Unable to create JString")
 }
 
+fun crash(env: CPointer<JNIEnvVar>, thiz: jobject, message: jstring) {
+    val messageString = env.getString(message)
+    env.fatalError(messageString)
+}
+
 @CName("JNI_OnLoad")
 fun loadJni(jvm: CPointer<JavaVMVar>, reserved: CPointer<*>): Int {
     val env = jvm.env() ?: error("Unable to get JNI environment")
@@ -59,34 +64,34 @@ fun registerJniNatives(env: CPointer<JNIEnvVar>) {
     env.registerNatives {
         clazz = env.findClass("io.github.landrynorris.sample.JniBridge".signature())
 
-        method {
-            name = "buttonClicked"
+        method("buttonClicked") {
             signature = signature(::buttonClicked)
             function = staticCFunction(::buttonClicked)
         }
 
-        method {
-            name = "createRepository"
+        method("createRepository") {
             signature = signature(::createRepository)
             function = staticCFunction(::createRepository)
         }
 
-        method {
-            name = "getText"
+        method("getText") {
             signature = Signature(listOf(Long), String).toString()
             function = staticCFunction(::getText)
         }
 
-        method {
-            name = "methodWithParameters"
+        method("methodWithParameters") {
             signature = signature(::methodWithParameters)
             function = staticCFunction(::methodWithParameters)
         }
 
-        method {
-            name = "callJavaFunction"
+        method("callJavaFunction") {
             signature = signature(::callJavaFunction)
             function = staticCFunction(::callJavaFunction)
+        }
+
+        method("crash") {
+            signature = Signature(listOf(String)).toString()
+            function = staticCFunction(::crash)
         }
     }
     println("Finished registering native methods")

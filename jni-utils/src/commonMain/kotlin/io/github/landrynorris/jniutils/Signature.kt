@@ -3,7 +3,7 @@ package io.github.landrynorris.jniutils
 import platform.android.jstring
 import kotlin.reflect.KClass
 
-data class Signature(val parameterClasses: List<JClass>, val returnClass: JClass) {
+data class Signature(val parameterClasses: List<JClass>, val returnClass: JClass = Void) {
     override fun toString(): String {
         return "(${parameterClasses.joinToString(separator = "")})$returnClass"
     }

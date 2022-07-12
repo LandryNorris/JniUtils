@@ -45,7 +45,7 @@ class JNIMethodScope {
 
     var clazz: jclass? = null
 
-    fun method(block: JNIMethod.() -> Unit) {
+    fun method(name: String, block: JNIMethod.() -> Unit) {
         val method = JNIMethod()
         method.block()
         methods.add(method)

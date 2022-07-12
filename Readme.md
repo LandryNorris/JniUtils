@@ -28,4 +28,36 @@ memScoped {
 myString.toJString(env)
 ```
 
+Registering natives
+-------------------
 
+This library provides a DSL for registering JNI methods.
+
+```kotlin
+env.registerNatives {
+    clazz = env.findClass("io.github.landrynorris.sample.JniBridge".signature())
+
+    method {
+        name = "buttonClicked"
+        signature = signature(::buttonClicked)
+        function = staticCFunction(::buttonClicked)
+    }
+
+    method {
+        name = "getText"
+        signature = Signature(listOf(Long), String).toString()
+        function = staticCFunction(::getText)
+    }
+}
+```
+
+You must provide a clazz value in the DSL.
+
+There are two ways of defining the signature:
+
+1. the Signature() constructor. Provide a list of parameter 
+signatures and a single return signature. The Signature#toString()
+method creates a signature that the JNI can recognize.
+2. For simple methods (jstring, jobject, etc. are not currently 
+supported), you can use the signature(Function) method to
+automatically create a signature.
