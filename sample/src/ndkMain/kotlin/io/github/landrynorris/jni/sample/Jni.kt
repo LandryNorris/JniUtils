@@ -55,8 +55,6 @@ fun loadJni(jvm: CPointer<JavaVMVar>, reserved: CPointer<*>): Int {
     val env = jvm.env() ?: error("Unable to get JNI environment")
     registerJniNatives(env)
 
-    val types = listOf(JNIMethod::class, kotlin.Int::class, kotlin.Double::class)
-    println("Types are: ${types.joinToString(", ") { classToSignature(it).signature }}")
     return JNI_VERSION_1_6
 }
 
@@ -75,7 +73,7 @@ fun registerJniNatives(env: CPointer<JNIEnvVar>) {
         }
 
         method("getText") {
-            signature = Signature(listOf(Long), String).toString()
+            signature = signature(::getText)
             function = staticCFunction(::getText)
         }
 

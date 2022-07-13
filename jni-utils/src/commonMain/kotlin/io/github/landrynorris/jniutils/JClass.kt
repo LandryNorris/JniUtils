@@ -19,6 +19,15 @@ val Double = JClass("D")
 val Void = JClass("V")
 val String = createSignature("java.lang.String")
 
+val BooleanArray = JClass("[Z")
+val ByteArray = JClass("[B")
+val CharArray = JClass("[C")
+val ShortArray = JClass("[S")
+val IntArray = JClass("[I")
+val LongArray = JClass("[J")
+val FloatArray = JClass("[F")
+val DoubleArray = JClass("[D")
+
 fun createSignature(fqName: String) = JClass("L${fqName.signature()};")
 
 fun createArraySignature(fqName: String) = JClass('[' + createSignature(fqName))

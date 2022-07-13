@@ -2,6 +2,8 @@ package io.github.landrynorris.jniutils
 
 import platform.android.jstring
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 data class Signature(val parameterClasses: List<JClass>, val returnClass: JClass = Void) {
     override fun toString(): String {
@@ -9,17 +11,25 @@ data class Signature(val parameterClasses: List<JClass>, val returnClass: JClass
     }
 }
 
-inline fun classToSignature(clazz: KClass<*>): JClass = when(clazz) {
-    Unit::class -> Void
-    kotlin.Byte::class -> Byte
-    kotlin.Boolean::class -> Boolean
-    kotlin.Short::class -> Short
-    kotlin.Char::class -> Char
-    kotlin.Int::class -> Int
-    kotlin.Long::class -> Long
-    kotlin.Float::class -> Float
-    kotlin.Double::class -> Double
-    else -> createSignature(clazz.qualifiedName ?: "")
+inline fun classToSignature(type: KType) = when(type) {
+    typeOf<Unit>() -> Void
+    typeOf<Byte>() -> Byte
+    typeOf<Boolean>() -> Boolean
+    typeOf<Short>() -> Short
+    typeOf<Char>() -> Char
+    typeOf<Int>() -> Int
+    typeOf<Long>() -> Long
+    typeOf<Float>() -> Float
+    typeOf<Double>() -> Double
+    typeOf<jstring>() -> String
+    typeOf<BooleanArray>() -> BooleanArray
+    typeOf<ByteArray>() -> ByteArray
+    typeOf<ShortArray>() -> ShortArray
+    typeOf<CharArray>() -> CharArray
+    typeOf<IntArray>() -> IntArray
+    typeOf<FloatArray>() -> FloatArray
+    typeOf<DoubleArray>() -> DoubleArray
+    else -> createSignature(type.toString())
 }
 
 

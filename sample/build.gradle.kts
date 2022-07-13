@@ -59,6 +59,7 @@ kotlin {
         val ndkMain by creating {
             dependencies {
                 implementation(project(":jni-utils"))
+                //implementation("io.github.landrynorris:jni-utils:0.0.1-alpha02")
             }
         }
 
@@ -115,4 +116,5 @@ android {
 repositories {
     mavenCentral()
     google()
+    mavenLocal()
 }

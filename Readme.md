@@ -1,6 +1,12 @@
 JNI Utils
 ========
 
+using this library:
+
+```kotlin
+implementation("io.github.landrynorris:jni-utils:0.0.1-alpha01")
+```
+
 This library provides bindings to the JNI library on Android.
 
 The primary motivator of this library is the syntax for calling
