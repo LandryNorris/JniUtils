@@ -25,8 +25,8 @@ fun CPointer<JNIEnvVar>.getStringChars(string: jstring): CPointer<jcharVar>? {
 }
 
 fun CPointer<JNIEnvVar>.getString(string: jstring): String {
-    val chars = getStringChars(string)
-    return chars?.toKString() ?: error("Unable to create a String from the given jstring")
+    val chars = getStringUTFChars(string)
+    return chars?.toKStringFromUtf8() ?: error("Unable to create a String from the given jstring")
 }
 
 fun CPointer<JNIEnvVar>.releaseStringChars(string: jstring, chars: CPointer<jcharVar>?) {
