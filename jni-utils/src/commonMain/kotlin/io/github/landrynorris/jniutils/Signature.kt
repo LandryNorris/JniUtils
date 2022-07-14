@@ -1,5 +1,6 @@
 package io.github.landrynorris.jniutils
 
+import platform.android.jobject
 import platform.android.jstring
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -11,6 +12,8 @@ data class Signature(val parameterClasses: List<JClass>, val returnClass: JClass
     }
 }
 
+inline fun <reified T> signature() = classToSignature(typeOf<T>())
+
 inline fun classToSignature(type: KType) = when(type) {
     typeOf<Unit>() -> Void
     typeOf<Byte>() -> Byte
@@ -21,7 +24,6 @@ inline fun classToSignature(type: KType) = when(type) {
     typeOf<Long>() -> Long
     typeOf<Float>() -> Float
     typeOf<Double>() -> Double
-    typeOf<jstring>() -> String
     typeOf<BooleanArray>() -> BooleanArray
     typeOf<ByteArray>() -> ByteArray
     typeOf<ShortArray>() -> ShortArray
@@ -29,7 +31,7 @@ inline fun classToSignature(type: KType) = when(type) {
     typeOf<IntArray>() -> IntArray
     typeOf<FloatArray>() -> FloatArray
     typeOf<DoubleArray>() -> DoubleArray
+    typeOf<jobject>() -> createSignature("java.lang.Object")
+    typeOf<jstring>() -> String
     else -> createSignature(type.toString())
 }
-
-

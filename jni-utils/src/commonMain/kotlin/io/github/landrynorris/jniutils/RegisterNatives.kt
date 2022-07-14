@@ -12,7 +12,7 @@ fun CPointer<JNIEnvVar>.registerNatives(clazz: jclass, methods: List<JNINativeMe
         name = m.name
         signature = m.signature
         fnPtr = m.fnPtr
-        println("Signature is ${m.signature}")
+        println("Signature is ${m.signature?.toKString()}")
     }
     method.invoke(this@registerNatives, clazz, methodBuffer, methods.size)
 }

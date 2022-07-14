@@ -56,7 +56,9 @@ kotlin {
     }
 
     sourceSets {
+        val commonMain by getting
         val ndkMain by creating {
+            dependsOn(commonMain)
             dependencies {
                 implementation(project(":jni-utils"))
                 //implementation("io.github.landrynorris:jni-utils:0.0.1-alpha02")

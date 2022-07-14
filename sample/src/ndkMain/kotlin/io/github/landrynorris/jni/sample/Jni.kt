@@ -25,6 +25,10 @@ fun callJavaFunction(env: CPointer<JNIEnvVar>, thiz: jobject, value: Double) {
     }
 }
 
+fun doubleAll(env: CPointer<JNIEnvVar>, thiz: jobject, array: DoubleArray): DoubleArray {
+    return array.map { it*2 }.toDoubleArray()
+}
+
 fun createRepository(env: CPointer<JNIEnvVar>, thiz: jobject): Long {
     val repository = ButtonClickRepository()
     println("Converting repository to pointer")
@@ -43,6 +47,13 @@ fun getText(env: CPointer<JNIEnvVar>, thiz: jobject, ptr: Long): jstring {
     println("Found repository for getting text")
     println("Repository text is ${repository.getCounter()}")
     return repository.getText().toJString(env) ?: error("Unable to create JString")
+}
+
+fun handleSharedClass(env: CPointer<JNIEnvVar>, thiz: jobject, data: jobject): jstring {
+    val shared = data.toSharedClass(env)!!
+    val total = shared.x * shared.dataHolder.i * shared.dataHolder.d
+    val s = shared.dataHolder.s + ": " + total
+    return s.toJString(env) ?: error("Unable to create JString")
 }
 
 fun crash(env: CPointer<JNIEnvVar>, thiz: jobject, message: jstring) {
@@ -73,7 +84,7 @@ fun registerJniNatives(env: CPointer<JNIEnvVar>) {
         }
 
         method("getText") {
-            signature = signature(::getText)
+            signature = Signature(listOf(Long), String).toString()
             function = staticCFunction(::getText)
         }
 
@@ -90,6 +101,16 @@ fun registerJniNatives(env: CPointer<JNIEnvVar>) {
         method("crash") {
             signature = Signature(listOf(String)).toString()
             function = staticCFunction(::crash)
+        }
+
+//        method("doubleAll") {
+//            signature = signature(::doubleAll)
+//            function = staticCFunction(::doubleAll)
+//        }
+
+        method("handleShared") {
+            signature = Signature(listOf(signature<SharedClass>()), String).toString()
+            function = staticCFunction(::handleSharedClass)
         }
     }
     println("Finished registering native methods")

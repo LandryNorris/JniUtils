@@ -17,4 +17,12 @@
             android:text="Crash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+    <TextView android:id="@+id/doubleValuesLabel"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"/>
+
+    <TextView android:id="@+id/sharedClassLabel"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"/>
 </LinearLayout>

@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.landrynorris.jni.sample.DataHolder
+import io.github.landrynorris.jni.sample.SharedClass
 import io.github.landrynorris.sample.ui.theme.JniUtilsTheme
 
 class MainActivity: AppCompatActivity() {
@@ -27,7 +29,16 @@ class MainActivity: AppCompatActivity() {
         findViewById<Button>(R.id.btnCrash).setOnClickListener {
             JniBridge.crash("App requested a Fatal Error")
         }
+
+        //findViewById<TextView>(R.id.doubleValuesLabel).text = getDoubleValuesText()
+        findViewById<TextView>(R.id.doubleValuesLabel).text = JniBridge.handleShared(
+            SharedClass(0.5, DataHolder(5, 2.5, "multiplied values"))
+        )
     }
+
+//    private fun getDoubleValuesText(): String {
+//        return JniBridge.doubleAll(doubleArrayOf(0.0, 0.5, 2.0, -3.0)).joinToString(", ")
+//    }
 
     private fun testJni() {
         JniBridge.methodWithParameters(50)
