@@ -25,8 +25,9 @@ fun callJavaFunction(env: CPointer<JNIEnvVar>, thiz: jobject, value: Double) {
     }
 }
 
-fun doubleAll(env: CPointer<JNIEnvVar>, thiz: jobject, array: DoubleArray): DoubleArray {
-    return array.map { it*2 }.toDoubleArray()
+fun doubleAll(env: CPointer<JNIEnvVar>, thiz: jobject, array: jdoubleArray): jdoubleArray {
+    val doubleArray = env.getDoubleArrayElements(array)
+    return doubleArray.map { it*2 }.toDoubleArray().toJava(env)
 }
 
 fun createRepository(env: CPointer<JNIEnvVar>, thiz: jobject): Long {
@@ -103,10 +104,10 @@ fun registerJniNatives(env: CPointer<JNIEnvVar>) {
             function = staticCFunction(::crash)
         }
 
-//        method("doubleAll") {
-//            signature = signature(::doubleAll)
-//            function = staticCFunction(::doubleAll)
-//        }
+        method("doubleAll") {
+            signature = Signature(listOf(DoubleArray), DoubleArray).toString()
+            function = staticCFunction(::doubleAll)
+        }
 
         method("handleShared") {
             signature = Signature(listOf(signature<SharedClass>()), String).toString()

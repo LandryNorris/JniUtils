@@ -11,7 +11,7 @@ object JniBridge {
 
     external fun methodWithParameters(value: Int)
     external fun handleShared(sharedClass: SharedClass): String
-    //external fun doubleAll(array: DoubleArray): DoubleArray
+    external fun doubleAll(array: DoubleArray): DoubleArray
     external fun callJavaFunction(value: Double)
     external fun buttonClicked(ptr: Long)
     external fun getText(ptr: Long): String

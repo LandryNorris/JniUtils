@@ -4,8 +4,7 @@ import kotlinx.cinterop.CPointer
 import kotlinx.cinterop.get
 import kotlinx.cinterop.invoke
 import kotlinx.cinterop.pointed
-import platform.android.JNIEnvVar
-import platform.android.jbooleanArray
+import platform.android.*
 
 fun CPointer<JNIEnvVar>.getBooleanArrayElements(array: jbooleanArray): BooleanArray {
     val method = pointed.pointed?.GetBooleanArrayElements ?: error("JNI is not Oracle standard")
@@ -19,7 +18,7 @@ fun CPointer<JNIEnvVar>.getBooleanArrayElements(array: jbooleanArray): BooleanAr
     }
 }
 
-fun CPointer<JNIEnvVar>.getByteArrayElements(array: jbooleanArray): ByteArray {
+fun CPointer<JNIEnvVar>.getByteArrayElements(array: jbyteArray): ByteArray {
     val method = pointed.pointed?.GetByteArrayElements ?: error("JNI is not Oracle standard")
     val size = getArrayLength(array)
     val data = method.invoke(this, array, null)
@@ -31,7 +30,7 @@ fun CPointer<JNIEnvVar>.getByteArrayElements(array: jbooleanArray): ByteArray {
     }
 }
 
-fun CPointer<JNIEnvVar>.getCharArrayElements(array: jbooleanArray): CharArray {
+fun CPointer<JNIEnvVar>.getCharArrayElements(array: jcharArray): CharArray {
     val method = pointed.pointed?.GetCharArrayElements ?: error("JNI is not Oracle standard")
     val size = getArrayLength(array)
     val data = method.invoke(this, array, null)
@@ -43,7 +42,7 @@ fun CPointer<JNIEnvVar>.getCharArrayElements(array: jbooleanArray): CharArray {
     }
 }
 
-fun CPointer<JNIEnvVar>.getShortArrayElements(array: jbooleanArray): ShortArray {
+fun CPointer<JNIEnvVar>.getShortArrayElements(array: jshortArray): ShortArray {
     val method = pointed.pointed?.GetShortArrayElements ?: error("JNI is not Oracle standard")
     val size = getArrayLength(array)
     val data = method.invoke(this, array, null)
@@ -55,7 +54,7 @@ fun CPointer<JNIEnvVar>.getShortArrayElements(array: jbooleanArray): ShortArray 
     }
 }
 
-fun CPointer<JNIEnvVar>.getIntArrayElements(array: jbooleanArray): IntArray {
+fun CPointer<JNIEnvVar>.getIntArrayElements(array: jintArray): IntArray {
     val method = pointed.pointed?.GetIntArrayElements ?: error("JNI is not Oracle standard")
     val size = getArrayLength(array)
     val data = method.invoke(this, array, null)
@@ -67,7 +66,7 @@ fun CPointer<JNIEnvVar>.getIntArrayElements(array: jbooleanArray): IntArray {
     }
 }
 
-fun CPointer<JNIEnvVar>.getLongArrayElements(array: jbooleanArray): LongArray {
+fun CPointer<JNIEnvVar>.getLongArrayElements(array: jlongArray): LongArray {
     val method = pointed.pointed?.GetLongArrayElements ?: error("JNI is not Oracle standard")
     val size = getArrayLength(array)
     val data = method.invoke(this, array, null)
@@ -79,7 +78,7 @@ fun CPointer<JNIEnvVar>.getLongArrayElements(array: jbooleanArray): LongArray {
     }
 }
 
-fun CPointer<JNIEnvVar>.getFloatArrayElements(array: jbooleanArray): FloatArray {
+fun CPointer<JNIEnvVar>.getFloatArrayElements(array: jfloatArray): FloatArray {
     val method = pointed.pointed?.GetFloatArrayElements ?: error("JNI is not Oracle standard")
     val size = getArrayLength(array)
     val data = method.invoke(this, array, null)
@@ -91,7 +90,7 @@ fun CPointer<JNIEnvVar>.getFloatArrayElements(array: jbooleanArray): FloatArray 
     }
 }
 
-fun CPointer<JNIEnvVar>.getDoubleArrayElements(array: jbooleanArray): DoubleArray {
+fun CPointer<JNIEnvVar>.getDoubleArrayElements(array: jdoubleArray): DoubleArray {
     val method = pointed.pointed?.GetDoubleArrayElements ?: error("JNI is not Oracle standard")
     val size = getArrayLength(array)
     val data = method.invoke(this, array, null)

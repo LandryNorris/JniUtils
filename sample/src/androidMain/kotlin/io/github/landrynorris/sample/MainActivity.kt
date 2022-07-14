@@ -30,15 +30,15 @@ class MainActivity: AppCompatActivity() {
             JniBridge.crash("App requested a Fatal Error")
         }
 
-        //findViewById<TextView>(R.id.doubleValuesLabel).text = getDoubleValuesText()
+        findViewById<TextView>(R.id.doubleValuesLabel).text = getDoubleValuesText()
         findViewById<TextView>(R.id.doubleValuesLabel).text = JniBridge.handleShared(
             SharedClass(0.5, DataHolder(5, 2.5, "multiplied values"))
         )
     }
 
-//    private fun getDoubleValuesText(): String {
-//        return JniBridge.doubleAll(doubleArrayOf(0.0, 0.5, 2.0, -3.0)).joinToString(", ")
-//    }
+    private fun getDoubleValuesText(): String {
+        return JniBridge.doubleAll(doubleArrayOf(0.0, 0.5, 2.0, -3.0)).joinToString(", ")
+    }
 
     private fun testJni() {
         JniBridge.methodWithParameters(50)

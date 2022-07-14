@@ -3,6 +3,12 @@ package io.github.landrynorris.jniutils
 import kotlinx.cinterop.*
 import platform.android.*
 
+fun CPointer<JNIEnvVar>.setBooleanArrayRegion(array: jbooleanArray, start: Int,
+                                              length: Int, buffer: CArrayPointer<jbooleanVar>) {
+    val method = pointed.pointed?.SetBooleanArrayRegion ?: error("JNI is not Oracle standard")
+    method.invoke(this, array, start, length, buffer)
+}
+
 fun CPointer<JNIEnvVar>.setByteArrayRegion(array: jbyteArray, start: Int,
                                            length: Int, buffer: CArrayPointer<jbyteVar>) {
     val method = pointed.pointed?.SetByteArrayRegion ?: error("JNI is not Oracle standard")
@@ -51,9 +57,10 @@ Kotlin integration
  */
 
 fun CPointer<JNIEnvVar>.setBooleanArrayRegion(array: jbooleanArray, start: Int,
-                                              length: Int, buffer: CArrayPointer<jbooleanVar>) {
-    val method = pointed.pointed?.SetBooleanArrayRegion ?: error("JNI is not Oracle standard")
-    method.invoke(this, array, start, length, buffer)
+                                              length: Int, values: BooleanArray) = memScoped {
+    val buffer = allocArray<jbooleanVar>(length)
+    values.forEachIndexed { index, value -> buffer[index] = value.toJBoolean() }
+    setBooleanArrayRegion(array, start, length, buffer)
 }
 
 fun CPointer<JNIEnvVar>.setByteArrayRegion(array: jbyteArray, start: Int,
