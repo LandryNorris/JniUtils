@@ -43,14 +43,12 @@ This library provides a DSL for registering JNI methods.
 env.registerNatives {
     clazz = env.findClass("io.github.landrynorris.sample.JniBridge".signature())
 
-    method {
-        name = "buttonClicked"
+    method("buttonClicked") {
         signature = signature(::buttonClicked)
         function = staticCFunction(::buttonClicked)
     }
 
-    method {
-        name = "getText"
+    method("getText") {
         signature = Signature(listOf(Long), String).toString()
         function = staticCFunction(::getText)
     }
