@@ -2,10 +2,7 @@ package io.github.landrynorris.jni.sample
 
 import io.github.landrynorris.jniutils.*
 import kotlinx.cinterop.*
-import kotlinx.cinterop.nativeHeap.alloc
 import platform.android.*
-import kotlin.math.sign
-import kotlin.reflect.KClass
 
 fun methodWithParameters(env: CPointer<JNIEnvVar>, thiz: jobject, intValue: Int) {
     println("Got int from JVM. Value is $intValue")
@@ -25,7 +22,7 @@ fun callJavaFunction(env: CPointer<JNIEnvVar>, thiz: jobject, value: Double) {
     }
 }
 
-fun createDataClass(env: CPointer<JNIEnvVar>, thiz: jobject, s: String, i: Int,
+fun createDataClass(env: CPointer<JNIEnvVar>, thiz: jobject, s: jstring, i: Int,
                     d: Double, doubles: jdoubleArray): jobject? {
     // We can use ::class because the class is shared between JNI and JVM source set.
     // This is helpful for reducing mistakes
@@ -33,9 +30,8 @@ fun createDataClass(env: CPointer<JNIEnvVar>, thiz: jobject, s: String, i: Int,
         ?: error("Can't find class")
     val constructorSignature = Signature(listOf(String, Int, Double, DoubleArray), Void)
     val constructorId = env.getMethodId(clazz, "<init>", constructorSignature.toString())
-    val js = s.toJString(env)!!
     return memScoped {
-        env.newObject(clazz, constructorId!!, js.jvalue(this),
+        env.newObject(clazz, constructorId!!, s.jvalue(this),
             i.jvalue(this), d.jvalue(this), doubles.jvalue(this))
     }
 }

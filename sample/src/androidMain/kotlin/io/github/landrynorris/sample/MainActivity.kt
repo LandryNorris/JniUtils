@@ -4,13 +4,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import io.github.landrynorris.jni.sample.DataClass
 import io.github.landrynorris.jni.sample.DataHolder
 import io.github.landrynorris.jni.sample.SharedClass
-import io.github.landrynorris.sample.ui.theme.JniUtilsTheme
 
 class MainActivity: AppCompatActivity() {
     private val buttonRepository = ButtonRepository()
@@ -56,20 +52,7 @@ class MainActivity: AppCompatActivity() {
             if(dataClass.s != s) error("String wasn't set correctly")
             if(dataClass.i != i) error("Int wasn't set correctly")
             if(dataClass.d != d) error("Double wasn't set correctly")
-            if(dataClass.doubles != doubles) error("Double array wasn't set correctly")
+            if(!dataClass.doubles.contentEquals(doubles)) error("Double array wasn't set correctly")
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    JniUtilsTheme {
-        Greeting("Android")
     }
 }

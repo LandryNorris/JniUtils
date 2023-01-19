@@ -1,10 +1,71 @@
-import org.jetbrains.compose.compose
 
 plugins {
     id("com.android.application")
-    id("org.jetbrains.compose")
     kotlin("multiplatform")
 }
+
+kotlin {
+    android()
+    val androidNdkTargets = listOf(androidNativeArm64(), androidNativeArm32(),
+        androidNativeX64(), androidNativeX86())
+
+    sourceSets {
+        val commonMain by getting
+        val ndkMain by creating {
+            dependsOn(commonMain)
+            dependencies {
+                implementation(project(":jni-utils"))
+                //implementation("io.github.landrynorris:jni-utils:$version")
+            }
+        }
+
+        val androidNativeArm64Main by getting {
+            dependsOn(ndkMain)
+        }
+        val androidNativeArm32Main by getting {
+            dependsOn(ndkMain)
+        }
+        val androidNativeX64Main by getting {
+            dependsOn(ndkMain)
+        }
+        val androidNativeX86Main by getting {
+            dependsOn(ndkMain)
+        }
+        val androidMain by getting {
+            dependencies {
+                implementation("androidx.appcompat:appcompat:1.6.0")
+            }
+        }
+
+        val androidTest by getting {
+            dependencies {
+                implementation("junit:junit:4.13.2")
+                implementation("androidx.test.ext:junit:1.1.5")
+                implementation("androidx.test.espresso:espresso-core:3.5.1")
+            }
+        }
+    }
+}
+
+android {
+    compileSdk = 33
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    defaultConfig {
+        minSdk = 21
+        targetSdk = 33
+    }
+
+    buildFeatures {
+        compose = false
+    }
+}
+
+repositories {
+    mavenCentral()
+    google()
+    mavenLocal()
+}
+
 
 tasks {
     val prepareAndroidNdkSo by creating {
@@ -42,82 +103,4 @@ tasks {
             }
         }
     }
-}
-
-kotlin {
-    android()
-
-    val androidNdkTargets = listOf(androidNativeArm64(), androidNativeArm32(),
-        androidNativeX64(), androidNativeX86())
-
-    androidNdkTargets.forEach {
-        it.binaries {
-            sharedLib()
-        }
-    }
-
-    sourceSets {
-        val commonMain by getting
-        val ndkMain by creating {
-            dependsOn(commonMain)
-            dependencies {
-                implementation(project(":jni-utils"))
-                //implementation("io.github.landrynorris:jni-utils:$version")
-            }
-        }
-
-        val androidNativeArm64Main by getting {
-            dependsOn(ndkMain)
-        }
-        val androidNativeArm32Main by getting {
-            dependsOn(ndkMain)
-        }
-        val androidNativeX64Main by getting {
-            dependsOn(ndkMain)
-        }
-        val androidNativeX86Main by getting {
-            dependsOn(ndkMain)
-        }
-
-        val androidMain by getting {
-            dependencies {
-                implementation("com.google.android.material:material:1.7.0")
-                implementation("androidx.appcompat:appcompat:1.6.0")
-                implementation("androidx.activity:activity-compose:1.6.1")
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material)
-                implementation(compose.materialIconsExtended)
-                implementation(compose.preview)
-                implementation(compose.uiTooling)
-            }
-        }
-
-        val androidTest by getting {
-            dependencies {
-                implementation("junit:junit:4.13.2")
-                implementation("androidx.test.ext:junit:1.1.5")
-                implementation("androidx.test.espresso:espresso-core:3.5.1")
-            }
-        }
-    }
-}
-
-android {
-    compileSdk = 32
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    defaultConfig {
-        minSdk = 21
-        targetSdk = 32
-    }
-
-    buildFeatures {
-        compose = true
-    }
-}
-
-repositories {
-    mavenCentral()
-    google()
-    mavenLocal()
 }
