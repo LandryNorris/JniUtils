@@ -18,6 +18,7 @@ val Float = JClass("F")
 val Double = JClass("D")
 val Void = JClass("V")
 val String = createSignature("java.lang.String")
+val Object = createSignature("java.lang.Object")
 
 val BooleanArray = JClass("[Z")
 val ByteArray = JClass("[B")

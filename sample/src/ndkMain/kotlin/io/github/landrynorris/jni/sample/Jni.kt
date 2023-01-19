@@ -68,6 +68,15 @@ fun handleSharedClass(env: CPointer<JNIEnvVar>, thiz: jobject, data: jobject): j
     return s.toJString(env) ?: error("Unable to create JString")
 }
 
+fun signatureWithCType(env: CPointer<JNIEnvVar>, thiz: jobject, s: jstring): jboolean {
+    return try {
+        println("Signature is ${signature(::signatureWithCType)}")
+        false.toJBoolean()
+    } catch (e: IllegalStateException) {
+        true.toJBoolean()
+    }
+}
+
 fun crash(env: CPointer<JNIEnvVar>, thiz: jobject, message: jstring) {
     val messageString = env.getString(message)
     env.fatalError(messageString)
@@ -111,8 +120,7 @@ fun registerJniNatives(env: CPointer<JNIEnvVar>) {
         }
 
         method("createDataClass") {
-            signature = Signature(listOf(String, Int, Double, DoubleArray),
-                createSignature("java.lang.Object")).toString()
+            signature = Signature(listOf(String, Int, Double, DoubleArray), Object).toString()
             function = staticCFunction(::createDataClass)
         }
 
@@ -129,6 +137,11 @@ fun registerJniNatives(env: CPointer<JNIEnvVar>) {
         method("handleShared") {
             signature = Signature(listOf(signature<SharedClass>()), String).toString()
             function = staticCFunction(::handleSharedClass)
+        }
+
+        method("signatureWithCType") {
+            signature = Signature(listOf(String), Boolean).toString()
+            function = staticCFunction(::signatureWithCType)
         }
     }
     println("Finished registering native methods")

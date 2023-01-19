@@ -14,6 +14,7 @@ object JniBridge {
     external fun doubleAll(array: DoubleArray): DoubleArray
     external fun callJavaFunction(value: Double)
     external fun createDataClass(s: String?, i: Int, d: Double, doubles: DoubleArray): Any
+    external fun signatureWithCType(s: String): Boolean
     external fun buttonClicked(ptr: Long)
     external fun getText(ptr: Long): String
     external fun createRepository(): Long

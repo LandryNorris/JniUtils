@@ -1,5 +1,6 @@
 package io.github.landrynorris.jniutils
 
+import kotlinx.cinterop.CPointed
 import platform.android.jobject
 import platform.android.jstring
 import kotlin.reflect.KClass
@@ -12,7 +13,11 @@ data class Signature(val parameterClasses: List<JClass>, val returnClass: JClass
     }
 }
 
-inline fun <reified T> signature() = classToSignature(typeOf<T>())
+inline fun <reified T> signature() = if(T::class == CPointed::class) {
+    error("We can't get the type from a CPointed yet.")
+} else {
+    classToSignature(typeOf<T>())
+}
 
 inline fun classToSignature(type: KType) = when(type) {
     typeOf<Unit>() -> Void
@@ -25,13 +30,14 @@ inline fun classToSignature(type: KType) = when(type) {
     typeOf<Float>() -> Float
     typeOf<Double>() -> Double
     typeOf<BooleanArray>() -> BooleanArray
+    typeOf<LongArray>() -> LongArray
     typeOf<ByteArray>() -> ByteArray
     typeOf<ShortArray>() -> ShortArray
     typeOf<CharArray>() -> CharArray
     typeOf<IntArray>() -> IntArray
     typeOf<FloatArray>() -> FloatArray
     typeOf<DoubleArray>() -> DoubleArray
-    typeOf<jobject>() -> createSignature("java.lang.Object")
+    typeOf<jobject>() -> Object
     typeOf<jstring>() -> String
     else -> createSignature(type.toString())
 }

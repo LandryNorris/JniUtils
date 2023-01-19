@@ -41,6 +41,9 @@ class MainActivity: AppCompatActivity() {
         JniBridge.methodWithParameters(50)
         JniBridge.callJavaFunction(12.5)
 
+        val didThrowException = JniBridge.signatureWithCType("Something")
+        if(!didThrowException) error("No error when trying to get type of CPointer")
+
         val s = "A string"
         val i = 200
         val d = 256.5

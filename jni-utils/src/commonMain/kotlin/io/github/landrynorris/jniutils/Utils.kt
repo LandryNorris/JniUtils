@@ -2,6 +2,11 @@ package io.github.landrynorris.jniutils
 
 import kotlinx.cinterop.*
 import platform.android.*
+import kotlin.reflect.KClass
+
+inline fun <T: KClass<*>> T.isCPointer(): Boolean {
+    return this == CPointer::class
+}
 
 fun jboolean.toBoolean(): Boolean = (this == JNI_TRUE.toUByte())
 
