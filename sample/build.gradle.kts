@@ -2,6 +2,7 @@ import org.jetbrains.compose.compose
 
 plugins {
     id("com.android.application")
+    id("org.jetbrains.compose")
     kotlin("multiplatform")
 }
 
@@ -61,7 +62,7 @@ kotlin {
             dependsOn(commonMain)
             dependencies {
                 implementation(project(":jni-utils"))
-                //implementation("io.github.landrynorris:jni-utils:0.0.1-alpha02")
+                //implementation("io.github.landrynorris:jni-utils:$version")
             }
         }
 
@@ -80,9 +81,9 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                implementation("com.google.android.material:material:1.6.1")
-                implementation("androidx.appcompat:appcompat:1.4.2")
-                implementation("androidx.activity:activity-compose:1.4.0")
+                implementation("com.google.android.material:material:1.7.0")
+                implementation("androidx.appcompat:appcompat:1.6.0")
+                implementation("androidx.activity:activity-compose:1.6.1")
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material)
@@ -95,8 +96,8 @@ kotlin {
         val androidTest by getting {
             dependencies {
                 implementation("junit:junit:4.13.2")
-                implementation("androidx.test.ext:junit:1.1.3")
-                implementation("androidx.test.espresso:espresso-core:3.4.0")
+                implementation("androidx.test.ext:junit:1.1.5")
+                implementation("androidx.test.espresso:espresso-core:3.5.1")
             }
         }
     }
