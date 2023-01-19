@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "io.github.landrynorris"
-version = "0.0.1-alpha02"
+version = "0.1.0-rc01"
 
 val properties by lazy {
     Properties().also { it.load(project.rootProject.file("local.properties").inputStream()) }

@@ -72,8 +72,8 @@ fun CPointer<JNIEnvVar>.allocObject(jclazz: jclass?): jobject? {
 fun CPointer<JNIEnvVar>.newObject(jclazz: jclass?,
                                    methodId: jmethodID, vararg args: jvalue): jobject? {
     val method = pointed.pointed?.NewObjectA ?: error("JNI is not Oracle standard")
-    return args.usePinned {
-        method.invoke(this, jclazz, methodId, null) //handle array elements later.
+    return memScoped {
+        method.invoke(this@newObject, jclazz, methodId, args.toCArray(this))
     }
 }
 

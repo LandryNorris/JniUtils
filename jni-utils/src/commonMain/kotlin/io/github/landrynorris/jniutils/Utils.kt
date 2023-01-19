@@ -39,6 +39,10 @@ fun Double.jvalue(scope: NativePlacement): jvalue {
     return scope.alloc<jvalue>().also { it.d = this }
 }
 
+fun jobject.jvalue(scope: NativePlacement): jvalue {
+    return scope.alloc<jvalue>().also { it.l = this }
+}
+
 fun Array<out CValue<jvalue>>.toCArray(memScope: NativePlacement): CArrayPointer<jvalue> {
     val arr = this
     return memScope.allocArray(size) { index ->
