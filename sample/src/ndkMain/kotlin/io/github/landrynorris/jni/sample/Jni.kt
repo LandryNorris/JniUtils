@@ -25,6 +25,21 @@ fun callJavaFunction(env: CPointer<JNIEnvVar>, thiz: jobject, value: Double) {
     }
 }
 
+fun createDataClass(env: CPointer<JNIEnvVar>, thiz: jobject, s: String, i: Int,
+                    d: Double, doubles: jdoubleArray): jobject? {
+    // We can use ::class because the class is shared between JNI and JVM source set.
+    // This is helpful for reducing mistakes
+    val clazz = env.findClass(DataClass::class.qualifiedName?.signature() ?: "")
+        ?: error("Can't find class")
+    val constructorSignature = Signature(listOf(String, Int, Double, DoubleArray), Void)
+    val constructorId = env.getMethodId(clazz, "<init>", constructorSignature.toString())
+    val js = s.toJString(env)!!
+    return memScoped {
+        env.newObject(clazz, constructorId!!, js.jvalue(this),
+            i.jvalue(this), d.jvalue(this), doubles.jvalue(this))
+    }
+}
+
 fun doubleAll(env: CPointer<JNIEnvVar>, thiz: jobject, array: jdoubleArray): jdoubleArray {
     val doubleArray = env.getDoubleArrayElements(array)
     return doubleArray.map { it*2 }.toDoubleArray().toJava(env)
@@ -97,6 +112,11 @@ fun registerJniNatives(env: CPointer<JNIEnvVar>) {
         method("callJavaFunction") {
             signature = signature(::callJavaFunction)
             function = staticCFunction(::callJavaFunction)
+        }
+
+        method("createDataClass") {
+            signature = signature(::createDataClass)
+            function = staticCFunction(::createDataClass)
         }
 
         method("crash") {
