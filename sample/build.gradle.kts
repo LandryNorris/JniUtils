@@ -9,6 +9,12 @@ kotlin {
     val androidNdkTargets = listOf(androidNativeArm64(), androidNativeArm32(),
         androidNativeX64(), androidNativeX86())
 
+    androidNdkTargets.forEach {
+        it.binaries {
+            sharedLib()
+        }
+    }
+
     sourceSets {
         val commonMain by getting
         val ndkMain by creating {
@@ -65,7 +71,6 @@ repositories {
     google()
     mavenLocal()
 }
-
 
 tasks {
     val prepareAndroidNdkSo by creating {

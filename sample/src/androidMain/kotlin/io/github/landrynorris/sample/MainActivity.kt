@@ -54,5 +54,13 @@ class MainActivity: AppCompatActivity() {
             if(dataClass.d != d) error("Double wasn't set correctly")
             if(!dataClass.doubles.contentEquals(doubles)) error("Double array wasn't set correctly")
         }
+
+        val dataClassWithNull = JniBridge.createDataClass(null, 0, 0.0, doubleArrayOf())
+        if(dataClassWithNull is DataClass) {
+            if(dataClassWithNull.s != null) error("String wasn't set correctly")
+            if(dataClassWithNull.i != 0) error("Int wasn't set correctly")
+            if(dataClassWithNull.d != 0.0) error("Double wasn't set correctly")
+            if(dataClassWithNull.doubles.isNotEmpty()) error("Double array wasn't set correctly")
+        }
     }
 }

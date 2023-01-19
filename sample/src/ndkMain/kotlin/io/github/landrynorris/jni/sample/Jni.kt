@@ -111,7 +111,8 @@ fun registerJniNatives(env: CPointer<JNIEnvVar>) {
         }
 
         method("createDataClass") {
-            signature = signature(::createDataClass)
+            signature = Signature(listOf(String, Int, Double, DoubleArray),
+                createSignature("java.lang.Object")).toString()
             function = staticCFunction(::createDataClass)
         }
 
