@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import java.util.Properties
 
 plugins {
@@ -21,6 +22,11 @@ val javadocJar by tasks.registering(Jar::class) {
 kotlin {
     val androidTargets = listOf(androidNativeArm64(), androidNativeArm32(),
         androidNativeX64(), androidNativeX86())
+
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        optIn.addAll("kotlinx.cinterop.ExperimentalForeignApi")
+    }
 
     androidTargets.forEach {
         it.binaries {
