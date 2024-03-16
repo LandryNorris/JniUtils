@@ -5,7 +5,7 @@ plugins {
 }
 
 kotlin {
-    android()
+    androidTarget()
     val androidNdkTargets = listOf(androidNativeArm64(), androidNativeArm32(),
         androidNativeX64(), androidNativeX86())
 
@@ -15,35 +15,19 @@ kotlin {
         }
     }
 
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
-        val commonMain by getting
-        val ndkMain by creating {
-            dependsOn(commonMain)
-            dependencies {
-                implementation(project(":jni-utils"))
-                //implementation("io.github.landrynorris:jni-utils:$version")
-            }
+        androidNativeMain.get().dependencies {
+            implementation(project(":jni-utils"))
+            //implementation("io.github.landrynorris:jni-utils:$version")
         }
 
-        val androidNativeArm64Main by getting {
-            dependsOn(ndkMain)
-        }
-        val androidNativeArm32Main by getting {
-            dependsOn(ndkMain)
-        }
-        val androidNativeX64Main by getting {
-            dependsOn(ndkMain)
-        }
-        val androidNativeX86Main by getting {
-            dependsOn(ndkMain)
-        }
-        val androidMain by getting {
-            dependencies {
-                implementation("androidx.appcompat:appcompat:1.6.0")
-            }
+        androidMain.get().dependencies {
+            implementation("androidx.appcompat:appcompat:1.6.0")
         }
 
-        val androidTest by getting {
+        val androidUnitTest by getting {
             dependencies {
                 implementation("junit:junit:4.13.2")
                 implementation("androidx.test.ext:junit:1.1.5")
@@ -54,11 +38,17 @@ kotlin {
 }
 
 android {
-    compileSdk = 33
+    namespace = "io.github.landrynorris.sample"
+    compileSdk = 34
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {

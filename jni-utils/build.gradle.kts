@@ -1,9 +1,10 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import java.util.Properties
 
 plugins {
     kotlin("multiplatform")
     id("maven-publish")
-    id("org.jetbrains.dokka") version "1.6.20"
+    id("org.jetbrains.dokka") version "1.9.20"
     id("signing")
 }
 
@@ -22,6 +23,11 @@ kotlin {
     val androidTargets = listOf(androidNativeArm64(), androidNativeArm32(),
         androidNativeX64(), androidNativeX86())
 
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        optIn.addAll("kotlinx.cinterop.ExperimentalForeignApi")
+    }
+
     androidTargets.forEach {
         it.binaries {
             sharedLib("jni_utils")
@@ -29,7 +35,6 @@ kotlin {
     }
     
     sourceSets {
-        val commonMain by getting
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
