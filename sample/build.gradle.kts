@@ -1,3 +1,4 @@
+import org.gradle.configurationcache.extensions.capitalized
 
 plugins {
     id("com.android.application")
@@ -62,40 +63,41 @@ repositories {
     mavenLocal()
 }
 
-tasks {
-    val prepareAndroidNdkSo by creating {
-        dependsOn(build)
-        val debugArm32SoFolder = File(buildDir, "bin/androidNativeArm32/debugShared")
-        val jniArm32Folder = File(projectDir, "src/androidMain/jniLibs/armeabi-v7a")
-        val debugArm64SoFolder = File(buildDir, "bin/androidNativeArm64/debugShared")
-        val jniArm64Folder = File(projectDir, "src/androidMain/jniLibs/arm64-v8a")
+enum class Platform(val platformName: String, val archName: String) {
+    AndroidArm64("androidNativeArm64", "arm64-v8a"),
+    AndroidArm32("androidNativeArm32", "armeabi-v7a"),
+    AndroidX64("androidNativeX64", "x86_64"),
+    AndroidX86("androidNativeX86", "x86")
+}
 
-        val debugX86SoFolder = File(buildDir, "bin/androidNativeX86/debugShared")
-        val jniX86Folder = File(projectDir, "src/androidMain/jniLibs/x86")
-        val debugX64SoFolder = File(buildDir, "bin/androidNativeX64/debugShared")
-        val jniX64Folder = File(projectDir, "src/androidMain/jniLibs/x86_64")
+/**
+ * Create a task to prepare binary for a given platform.
+ */
+fun createSoPrepareTask(platform: Platform, flavor: String = "debug"): Task {
+    return tasks.create("prepare${platform.platformName}So") {
+        dependsOn("link${flavor.capitalized()}Shared${platform.platformName.capitalized()}")
+        val srcFolder = layout.buildDirectory.file("bin/${platform.platformName}/${flavor}Shared")
+        val destFolder = projectDir.resolve("src/androidMain/jniLibs/${platform.archName}")
 
         doLast {
             copy {
-                from(debugArm32SoFolder)
-                into(jniArm32Folder)
-                include("*.so")
-            }
-            copy {
-                from(debugArm64SoFolder)
-                into(jniArm64Folder)
-                include("*.so")
-            }
-            copy {
-                from(debugX86SoFolder)
-                into(jniX86Folder)
-                include("*.so")
-            }
-            copy {
-                from(debugX64SoFolder)
-                into(jniX64Folder)
+                from(srcFolder)
+                into(destFolder)
                 include("*.so")
             }
         }
+    }
+}
+
+val binaryTasks = listOf(
+    createSoPrepareTask(Platform.AndroidArm64),
+    createSoPrepareTask(Platform.AndroidArm32),
+    createSoPrepareTask(Platform.AndroidX64),
+    createSoPrepareTask(Platform.AndroidX86)
+)
+
+tasks.create("prepareAndroidNdkSo") {
+    binaryTasks.forEach {
+        this.dependsOn(it)
     }
 }
