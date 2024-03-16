@@ -5,7 +5,7 @@ plugins {
 }
 
 kotlin {
-    android()
+    androidTarget()
     val androidNdkTargets = listOf(androidNativeArm64(), androidNativeArm32(),
         androidNativeX64(), androidNativeX86())
 
@@ -43,7 +43,7 @@ kotlin {
             }
         }
 
-        val androidTest by getting {
+        val androidUnitTest by getting {
             dependencies {
                 implementation("junit:junit:4.13.2")
                 implementation("androidx.test.ext:junit:1.1.5")
@@ -54,11 +54,17 @@ kotlin {
 }
 
 android {
-    compileSdk = 33
+    namespace = "io.github.landrynorris.sample"
+    compileSdk = 34
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {
