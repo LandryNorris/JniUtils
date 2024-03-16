@@ -3,11 +3,14 @@ package io.github.landrynorris.jni.sample
 import io.github.landrynorris.jniutils.*
 import kotlinx.cinterop.*
 import platform.android.*
+import kotlin.experimental.ExperimentalNativeApi
 
+@OptIn(ExperimentalForeignApi::class)
 fun methodWithParameters(env: CPointer<JNIEnvVar>, thiz: jobject, intValue: Int) {
     println("Got int from JVM. Value is $intValue")
 }
 
+@OptIn(ExperimentalForeignApi::class)
 fun callJavaFunction(env: CPointer<JNIEnvVar>, thiz: jobject, value: Double) {
     val clazz = env.findClass("io/github/landrynorris/sample/JavaClass")
         ?: error("Unable to find class")
@@ -22,6 +25,7 @@ fun callJavaFunction(env: CPointer<JNIEnvVar>, thiz: jobject, value: Double) {
     }
 }
 
+@OptIn(ExperimentalForeignApi::class)
 fun createDataClass(env: CPointer<JNIEnvVar>, thiz: jobject, s: jstring, i: Int,
                     d: Double, doubles: jdoubleArray): jobject? {
     // We can use ::class because the class is shared between JNI and JVM source set.
@@ -36,17 +40,20 @@ fun createDataClass(env: CPointer<JNIEnvVar>, thiz: jobject, s: jstring, i: Int,
     }
 }
 
+@OptIn(ExperimentalForeignApi::class)
 fun doubleAll(env: CPointer<JNIEnvVar>, thiz: jobject, array: jdoubleArray): jdoubleArray {
     val doubleArray = env.getDoubleArrayElements(array)
     return doubleArray.map { it*2 }.toDoubleArray().toJava(env)
 }
 
+@OptIn(ExperimentalForeignApi::class)
 fun createRepository(env: CPointer<JNIEnvVar>, thiz: jobject): Long {
     val repository = ButtonClickRepository()
     println("Converting repository to pointer")
     return StableRef.create(repository).asCPointer().toLong()
 }
 
+@OptIn(ExperimentalForeignApi::class)
 fun buttonClicked(env: CPointer<JNIEnvVar>, thiz: jobject, ptr: Long) {
     println("Getting repository from pointer")
     val repository = ptr.pointed<ButtonClickRepository>() ?: error("ptr must not be null")
@@ -54,6 +61,7 @@ fun buttonClicked(env: CPointer<JNIEnvVar>, thiz: jobject, ptr: Long) {
     repository.clicked()
 }
 
+@OptIn(ExperimentalForeignApi::class)
 fun getText(env: CPointer<JNIEnvVar>, thiz: jobject, ptr: Long): jstring {
     val repository = ptr.pointed<ButtonClickRepository>() ?: error("ptr must not be null")
     println("Found repository for getting text")
@@ -61,6 +69,7 @@ fun getText(env: CPointer<JNIEnvVar>, thiz: jobject, ptr: Long): jstring {
     return repository.getText().toJString(env) ?: error("Unable to create JString")
 }
 
+@OptIn(ExperimentalForeignApi::class)
 fun handleSharedClass(env: CPointer<JNIEnvVar>, thiz: jobject, data: jobject): jstring {
     val shared = data.toSharedClass(env)!!
     val total = shared.x * shared.dataHolder.i * shared.dataHolder.d
@@ -68,6 +77,7 @@ fun handleSharedClass(env: CPointer<JNIEnvVar>, thiz: jobject, data: jobject): j
     return s.toJString(env) ?: error("Unable to create JString")
 }
 
+@OptIn(ExperimentalForeignApi::class)
 fun signatureWithCType(env: CPointer<JNIEnvVar>, thiz: jobject, s: jstring): jboolean {
     return try {
         println("Signature is ${signature(::signatureWithCType)}")
@@ -77,11 +87,13 @@ fun signatureWithCType(env: CPointer<JNIEnvVar>, thiz: jobject, s: jstring): jbo
     }
 }
 
+@OptIn(ExperimentalForeignApi::class)
 fun crash(env: CPointer<JNIEnvVar>, thiz: jobject, message: jstring) {
     val messageString = env.getString(message)
     env.fatalError(messageString)
 }
 
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
 @CName("JNI_OnLoad")
 fun loadJni(jvm: CPointer<JavaVMVar>, reserved: CPointer<*>): Int {
     val env = jvm.env() ?: error("Unable to get JNI environment")
@@ -90,6 +102,7 @@ fun loadJni(jvm: CPointer<JavaVMVar>, reserved: CPointer<*>): Int {
     return JNI_VERSION_1_6
 }
 
+@OptIn(ExperimentalForeignApi::class)
 fun registerJniNatives(env: CPointer<JNIEnvVar>) {
     env.registerNatives {
         clazz = env.findClass("io.github.landrynorris.sample.JniBridge".signature())
