@@ -15,32 +15,16 @@ kotlin {
         }
     }
 
+    applyDefaultHierarchyTemplate()
+
     sourceSets {
-        val commonMain by getting
-        val ndkMain by creating {
-            dependsOn(commonMain)
-            dependencies {
-                implementation(project(":jni-utils"))
-                //implementation("io.github.landrynorris:jni-utils:$version")
-            }
+        androidNativeMain.get().dependencies {
+            implementation(project(":jni-utils"))
+            //implementation("io.github.landrynorris:jni-utils:$version")
         }
 
-        val androidNativeArm64Main by getting {
-            dependsOn(ndkMain)
-        }
-        val androidNativeArm32Main by getting {
-            dependsOn(ndkMain)
-        }
-        val androidNativeX64Main by getting {
-            dependsOn(ndkMain)
-        }
-        val androidNativeX86Main by getting {
-            dependsOn(ndkMain)
-        }
-        val androidMain by getting {
-            dependencies {
-                implementation("androidx.appcompat:appcompat:1.6.0")
-            }
+        androidMain.get().dependencies {
+            implementation("androidx.appcompat:appcompat:1.6.0")
         }
 
         val androidUnitTest by getting {
